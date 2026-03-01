@@ -19,6 +19,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        // 設定 status bar 為白色，文字為深色
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            getWindow().setStatusBarColor(0xFFFFFFFF); // 純白色
+            getWindow().getDecorView().setSystemUiVisibility(
+                android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            );
+        }
 
         // 初始化 SwipeRefreshLayout
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
@@ -50,6 +58,13 @@ public class MainActivity extends AppCompatActivity {
                 super.onPageFinished(view, url);
                 // 停止刷新動畫
                 swipeRefreshLayout.setRefreshing(false);
+                
+                // 移除點擊藍色效果
+                String css = "* { -webkit-tap-highlight-color: transparent !important; }";
+                String javascript = "var style = document.createElement('style');" +
+                        "style.innerHTML = '" + css + "';" +
+                        "document.head.appendChild(style);";
+                webView.evaluateJavascript(javascript, null);
             }
         });
 
